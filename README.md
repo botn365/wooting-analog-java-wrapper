@@ -17,3 +17,7 @@ Windows Requires mingw compiler and add -Pwindows.
 Apple requires osxcross and add -Papple.
 
 gradlew build -Papple -Pwindows
+
+## LICENSE
+
+Project licensed under lgpl 3.0 not inluding the files under native/libs which have their own license
