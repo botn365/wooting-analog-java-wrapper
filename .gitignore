@@ -1,0 +1,11 @@
+native/*
+!native/libs
+!native/wrapperglue
+!native/CMakeLists.txt
+!native/cmake-toolchain
+
+
+.idea
+.gradle
+build
+src/main/resources/native

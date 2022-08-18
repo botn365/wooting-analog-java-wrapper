@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id "io.github.tomtzook.gradle-cmake" version "1.0.0"
+}
+
+group 'com.github.botn365'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-codec:commons-codec:1.5'
+}
+
+task generateJniHeaders(type:Exec) {
+    def classpath = "src/main/java"
+    def cls = "com.github.botn365.main.WootingAnalogWrapper"
+    commandLine "javah", "-o", "native/wrapperglue/glue.h", "-classpath", classpath, cls
+    dependsOn classes
+}
+
+def compileMachineTargets = [machines.host]
+if (System.properties['os.name'].toLowerCase().contains('linux')) {
+    if (project.hasProperty("windows")) {
+        machines.customMachines.register("windows x86_64") {
+            it.toolchainFile.set(project.file("native/cmake-toolchain/windows.cmake"))
+        }
+    }
+    if (project.hasProperty("apple")) {
+        machines.customMachines.register("apple x86_64") {
+            it.toolchainFile.set(project.file("native/cmake-toolchain/apple-x86_64.cmake"))
+        }
+        machines.customMachines.register("apple arm64") {
+            it.toolchainFile.set(project.file("native/cmake-toolchain/apple-arm64.cmake"))
+        }
+    }
+    compileMachineTargets.addAll(machines.customMachines)
+}
+
+cmake {
+    targets {
+        nativeGlue {
+            cmakeLists.set(file("native/CMakeLists.txt"))
+            targetMachines.addAll(compileMachineTargets)
+        }
+    }
+}
+
+tasks.clean.dependsOn tasks.cmakeClean
+tasks.processResources.dependsOn tasks.cmakeBuild
