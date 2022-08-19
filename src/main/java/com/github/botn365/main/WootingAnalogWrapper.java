@@ -19,7 +19,7 @@ public class WootingAnalogWrapper {
         WootingAnalogResult_NotAvailable(-1992),
         WootingAnalogResult_IncompatibleVersion(-1991),
         WootingAnalogResult_DLLNotFound(-1990);
-        final int value;
+        public final int value;
         WootingAnalogResult(int value) {
             this.value = value;
         }
@@ -63,7 +63,7 @@ public class WootingAnalogWrapper {
     public enum WootingAnalogDeviceEventType {
         WootingAnalog_DeviceEventType_Connected(1),
         WootingAnalog_DeviceEventType_Disconnected(2);
-        final int value;
+        public final int value;
         WootingAnalogDeviceEventType(int value) {
             this.value = value;
         }
@@ -73,7 +73,7 @@ public class WootingAnalogWrapper {
         WootingAnalog_DeviceType_Keyboard(1),
         WootingAnalog_DeviceType_Keypad(2),
         WootingAnalog_DeviceType_Other(3);
-        final int value;
+        public final int value;
         WootingAnalogDeviceType(int value) {
             this.value = value;
         }
@@ -90,12 +90,12 @@ public class WootingAnalogWrapper {
             this.deviceId = deviceId;
             this.deviceType = deviceType;
         }
-        int vendorId;
-        int productId;
-        String manufacturerName;
-        String deviceName;
-        long deviceId;
-        WootingAnalogDeviceType deviceType;
+        public int vendorId;
+        public int productId;
+        public String manufacturerName;
+        public String deviceName;
+        public long deviceId;
+        public WootingAnalogDeviceType deviceType;
     }
 
     public interface DeviceEventCallback {

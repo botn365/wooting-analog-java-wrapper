@@ -1,10 +1,17 @@
 plugins {
     id 'java'
     id "io.github.tomtzook.gradle-cmake" version "1.0.0"
+    id "com.palantir.git-version" version "0.12.3"
 }
 
 group 'com.github.botn365'
-version '1.0'
+
+try {
+    version = gitVersion()
+}
+catch (ignored) {
+    throw new IllegalStateException("This mod must be version controlled by Git AND the repository must provide at least one tag!")
+}
 
 sourceCompatibility = 1.8
 
