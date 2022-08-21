@@ -23,6 +23,10 @@ public class WootingAnalogWrapper {
         WootingAnalogResult(int value) {
             this.value = value;
         }
+
+        public boolean equals(WootingAnalogResult result) {
+            return this.value == result.value;
+        }
         /*
          * Translates A int to the Enum with the same value
          *  @ Param value Value of the enum
@@ -67,6 +71,9 @@ public class WootingAnalogWrapper {
         WootingAnalogDeviceEventType(int value) {
             this.value = value;
         }
+        public boolean equals(WootingAnalogDeviceEventType result) {
+            return this.value == result.value;
+        }
     }
 
     public enum WootingAnalogDeviceType {
@@ -76,6 +83,10 @@ public class WootingAnalogWrapper {
         public final int value;
         WootingAnalogDeviceType(int value) {
             this.value = value;
+        }
+
+        public boolean equals(WootingAnalogDeviceType result) {
+            return this.value == result.value;
         }
     }
 
