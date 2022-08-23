@@ -1,7 +1,7 @@
 set(CMAKE_SYSTEM_NAME Darwin)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
-SET(TOOL_CHAIN_PREFIX x86_64h-apple-darwin22-)
+SET(TOOL_CHAIN_PREFIX x86_64-apple-darwin22-)
 
 SET(CMAKE_C_COMPILER                   ${TOOL_CHAIN_PREFIX}clang)
 SET (CMAKE_C_FLAGS_INIT                "-Wall -std=c99")
