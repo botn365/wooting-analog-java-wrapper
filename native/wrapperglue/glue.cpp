@@ -192,10 +192,17 @@ jint JNICALL Java_com_github_botn365_main_WootingAnalogWrapper_wootingAnalogGetC
     int len = env->GetArrayLength(deviceArray);
     if (len > 0) {
         std::unique_ptr<WootingAnalog_DeviceInfo_FFI*[]> devices =  std::make_unique<WootingAnalog_DeviceInfo_FFI*[]>(len);
+        for (int i = 0; i < len; ++i) {
+            devices[i] = nullptr;
+        }
         int devicesCount = wooting_analog_get_connected_devices_info(devices.get(),len);
         for (int i = 0; i < devicesCount; ++i) {
-            jobject obj = newDeviceEFI(devices[i],env);
-            env->SetObjectArrayElement(deviceArray,i,obj);
+            if (devices[i] == nullptr) {
+                env->SetObjectArrayElement(deviceArray,i, nullptr);
+            } else {
+                jobject obj = newDeviceEFI(devices[i],env);
+                env->SetObjectArrayElement(deviceArray,i,obj);
+            }
         }
         return devicesCount;
     }
