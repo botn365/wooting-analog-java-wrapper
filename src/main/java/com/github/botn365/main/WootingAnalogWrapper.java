@@ -33,7 +33,7 @@ public class WootingAnalogWrapper {
          *
          * @Return WootingAnalogResult or NULL if not a valid value
          */
-        public WootingAnalogResult fromInt(int value) {
+        public static WootingAnalogResult fromInt(int value) {
             switch (value) {
                 case 1:
                     return WootingAnalogResult_Ok;
