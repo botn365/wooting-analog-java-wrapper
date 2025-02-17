@@ -9,3 +9,4 @@ native/*
 .gradle
 build
 src/main/resources/native
+.zig-cache/
