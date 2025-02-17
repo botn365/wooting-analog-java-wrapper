@@ -7,13 +7,13 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    //const strip = b.option(bool, "strip", "Strip debug symbols from the resulting binaries to minimize size");
+    const strip = b.option(bool, "strip", "Strip debug symbols from the resulting binaries to minimize size");
     const Os = std.Target.Os.Tag;
     const lib = b.addSharedLibrary(.{
         .name = "wooting-analog-sdk-java-glue",
         .target = target,
         .optimize = optimize,
-        //.strip = strip
+        .strip = strip
     });
     lib.addCSourceFiles(.{
         .files = &[_][]const u8{
