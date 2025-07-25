@@ -1,5 +1,7 @@
 .{
-    .name = "native",
+    .name = .native,
+    .fingerprint = 0xc0881db75401e384, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.14.1",
     .version = "0.0.0",
     .dependencies = .{
         .wooting_wrapper_apple_aarch64 = .{
@@ -22,5 +24,6 @@
     .paths = .{
         "build.zig",
         "build.zig.zon",
+        "native"
     },
 }
