@@ -150,7 +150,7 @@ public class WootingAnalogWrapper {
         } else if (os.contains("linux")) {
             if (x86_64) {
                 resourceNameLib = "natives/x86_64-linux-gnu/libwooting-analog-sdk-java-glue.so";
-                wootingDll = "natives/x86_64-linux-gnu/libwooting_analog_wrapper.so";
+                wootingDll = null;
             } else {
                 throw new RuntimeException("cpu arch "+cpu+" not suported on "+os);
             }
@@ -171,9 +171,11 @@ public class WootingAnalogWrapper {
         if (!hasUnpackedFile(resourceNameLib)) {
             throw new RuntimeException("native lib for "+os+" was not found in jar");
         }
-        File wraper =  unpackNativeLib(wootingDll);
+        if (wootingDll != null) {
+            File wraper = unpackNativeLib(wootingDll);
+            System.load(wraper.getAbsolutePath());
+        }
         File resource = unpackNativeLib(resourceNameLib);
-        System.load(wraper.getAbsolutePath());
         System.load(resource.getAbsolutePath());
     }
 }

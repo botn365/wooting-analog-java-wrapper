@@ -25,12 +25,9 @@ pub fn build(b: *std.Build) void {
     lib.linkSystemLibrary("wooting_analog_wrapper");
     if (target.result.os.tag == Os.linux) {
         const wrapper = b.dependency("wooting_wrapper_linux_x86_64", .{});
-        lib.root_module.addRPathSpecial("$ORIGIN/");
-        lib.addLibraryPath(wrapper.path("wrapper/"));
+        lib.root_module.addRPathSpecial("$ORIGIN");
+        lib.addLibraryPath(wrapper.path("wrapper/lib"));
         lib.addIncludePath(wrapper.path("wrapper/includes"));
-        b.getInstallStep().dependOn(&b.addInstallLibFile(
-            wrapper.path("wrapper/libwooting_analog_wrapper.so"),
-            "libwooting_analog_wrapper.so").step);
     } else if (target.result.os.tag == Os.windows) {
         const wrapper = b.dependency("wooting_wrapper_windows_x86_64", .{});
         lib.addLibraryPath(wrapper.path("wrapper/"));
