@@ -1,9 +1,12 @@
-import gradlebuild.ZigBuild
+import com.falsepattern.zigbuild.options.ZigBuildOptions
+import com.falsepattern.zigbuild.target.ZigTargetTriple
+import com.falsepattern.zigbuild.tasks.ZigBuildTask
+import com.falsepattern.zigbuild.toolchain.ZigVersion
 
 plugins {
-    id("java-library")
-    id("gradlebuild.zig")
-    id("com.palantir.git-version") version "0.15.0"
+    `java-library`
+    id("com.palantir.git-version") version "4.0.0"
+    id("com.falsepattern.zigbuild") version "0.1.1"
 }
 
 val gitVersion: groovy.lang.Closure<String> by extra
@@ -34,36 +37,44 @@ java {
     withJavadocJar()
 }
 
-val zigOutDir = layout.buildDirectory.dir("zig")
 zig {
-    zigVersion = "0.14.0-dev.3237+ddff1fa4c"
-    outputDir = zigOutDir
-    targets {
-        create("x86_64-linux-gnu")
-        create("x86_64-windows-gnu")
-        create("x86_64-macos-none")
-        create("aarch64-macos-none")
-    }.configureEach {
-        optimizer = "ReleaseSmall"
-        sources.from(layout.projectDirectory.dir("build.zig"))
-        sources.from(layout.projectDirectory.dir("build.zig.zon"))
+    toolchain {
+        version = ZigVersion.of("0.14.1")
     }
 }
-tasks.withType<ZigBuild>().all {
-    val zigBuild = this
-    val isWindows = zigBuild.target.map { it.contains("windows") }
-    val zigClean = tasks.register<Delete>("zigClean${zigBuild.name.removePrefix("zigBuild")}")
-    zigBuild.dependsOn(zigClean)
-    zigClean.configure {
-        group = "zig"
-        delete(zigBuild.outputDirectory)
+
+val zigPrefix = layout.buildDirectory.dir("zig-build")
+
+listOf(
+    ZigTargetTriple.X86_64_LINUX_GNU,
+    ZigTargetTriple.X86_64_WINDOWS_GNU,
+    ZigTargetTriple.X86_64_MACOS_NONE,
+    ZigTargetTriple.AARCH64_MACOS_NONE,
+).forEach { target ->
+    val targetName = target.resolve()
+    val prefix = zigPrefix.map { it.dir(targetName) }
+    val task = tasks.register<ZigBuildTask>("buildNatives$targetName") {
+        options {
+            steps.add("install")
+            this.target = target
+            optimize = ZigBuildOptions.Optimization.ReleaseSmall
+            this.compilerArgs.add("-Dstrip=true")
+        }
+        workingDirectory = layout.projectDirectory
+        prefixDirectory = prefix
+        clearPrefixDirectory = true
+        sourceFiles.from(
+            layout.projectDirectory.dir("build.zig"),
+            layout.projectDirectory.dir("build.zig.zon"),
+            layout.projectDirectory.dir("native")
+        )
     }
 
     tasks.named<ProcessResources>("processResources") {
-        into("/natives/"+zigBuild.target.get()) {
-            from(zigBuild.outputDirectory.dir(isWindows.map { if (it) "bin" else "lib" }))
+        dependsOn(task)
+        into("/natives/$targetName") {
+            from(prefix.map { it.dir("lib") })
             include("*.dll", "*.so", "*.dylib")
-            //rename("(\\w+)\\.(dll|so|dylib)", "$1-${zigBuild.target.get()}.$2")
         }
     }
 }

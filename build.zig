@@ -56,5 +56,8 @@ pub fn build(b: *std.Build) void {
                 "libwooting_analog_wrapper.dylib").step);
         }
     }
-    b.installArtifact(lib);
+    const install = b.addInstallArtifact(lib, .{
+        .dest_dir = .{ .override = .lib },
+    });
+    b.getInstallStep().dependOn(&install.step);
 }
