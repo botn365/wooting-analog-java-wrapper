@@ -143,7 +143,7 @@ public class WootingAnalogWrapper {
 //                    File lib = unpackNativeLib(libPthread);
 //                    System.load(lib.getAbsolutePath());
 //                }
-                wootingDll = "natives/windows/x86_64/wooting_analog_wrapper.dll";
+                wootingDll = "natives/x86_64-windows-gnu/wooting_analog_wrapper.dll";
             } else {
                 throw new RuntimeException("cpu arch "+cpu+" not suported on "+os);
             }
