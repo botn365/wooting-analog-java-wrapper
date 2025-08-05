@@ -1,26 +1,33 @@
 .{
-    .name = "native",
+    .name = .native,
+    .fingerprint = 0xc0881db75401e384, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.14.1",
     .version = "0.0.0",
     .dependencies = .{
         .wooting_wrapper_apple_aarch64 = .{
             .url = "https://github.com/WootingKb/wooting-analog-sdk/releases/download/v0.8.0/wooting-analog-sdk-v0.8.0-aarch64-apple-darwin.tar.gz",
             .hash = "1220e2d7f201c9bdafa9243a639e1b4e4b301fd59dfc78231442f20cb23ae7ac5c62",
+            .lazy = true,
         },
         .wooting_wrapper_linux_x86_64 = .{
             .url = "https://github.com/WootingKb/wooting-analog-sdk/releases/download/v0.8.0/wooting-analog-sdk-v0.8.0-x86_64-unknown-linux-gnu.tar.gz",
             .hash = "1220b73971772bbb62059f6d4c76dd5507fe0b4b420563752355f35a913096dd4643",
+            .lazy = true,
         },
         .wooting_wrapper_apple_x86_64 = .{
             .url = "https://github.com/WootingKb/wooting-analog-sdk/releases/download/v0.8.0/wooting-analog-sdk-v0.8.0-x86_64-apple-darwin.tar.gz",
             .hash = "1220e636fc09ad3bee31cb53bb37a9607b350a01caf846ce674a5d73efd95f6aeefd",
+            .lazy = true,
         },
         .wooting_wrapper_windows_x86_64 = .{
             .url = "https://github.com/WootingKb/wooting-analog-sdk/releases/download/v0.8.0/wooting-analog-sdk-v0.8.0-x86_64-pc-windows-msvc.tar.gz",
             .hash = "1220c681f60feed7cf2315dff75d70d9c320e560407f217990682cad9485e1addc66",
+            .lazy = true,
         },
     },
     .paths = .{
         "build.zig",
         "build.zig.zon",
+        "native"
     },
 }

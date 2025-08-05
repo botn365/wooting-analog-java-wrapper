@@ -24,37 +24,42 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(b.path("native/libs/jni/include/"));
     lib.linkSystemLibrary("wooting_analog_wrapper");
     if (target.result.os.tag == Os.linux) {
-        const wrapper = b.dependency("wooting_wrapper_linux_x86_64", .{});
-        lib.root_module.addRPathSpecial("$ORIGIN/");
-        lib.addLibraryPath(wrapper.path("wrapper/"));
-        lib.addIncludePath(wrapper.path("wrapper/includes"));
-        b.getInstallStep().dependOn(&b.addInstallLibFile(
-            wrapper.path("wrapper/libwooting_analog_wrapper.so"),
-            "libwooting_analog_wrapper.so").step);
+        if (b.lazyDependency("wooting_wrapper_linux_x86_64", .{})) |wrapper| {
+            //Linking against static library, because of missing SONAME in the dynamic one
+            lib.root_module.addRPathSpecial("$ORIGIN");
+            lib.addLibraryPath(wrapper.path("wrapper/lib"));
+            lib.addIncludePath(wrapper.path("wrapper/includes"));
+        }
     } else if (target.result.os.tag == Os.windows) {
-        const wrapper = b.dependency("wooting_wrapper_windows_x86_64", .{});
-        lib.addLibraryPath(wrapper.path("wrapper/"));
-        lib.addIncludePath(wrapper.path("wrapper/includes"));
-        b.getInstallStep().dependOn(&b.addInstallBinFile(
-            wrapper.path("wrapper/wooting_analog_wrapper.dll"),
-            "wooting_analog_wrapper.dll").step);
+        if (b.lazyDependency("wooting_wrapper_windows_x86_64", .{})) |wrapper| {
+            lib.addLibraryPath(wrapper.path("wrapper/"));
+            lib.addIncludePath(wrapper.path("wrapper/includes"));
+            b.getInstallStep().dependOn(&b.addInstallLibFile(
+                wrapper.path("wrapper/wooting_analog_wrapper.dll"),
+                "wooting_analog_wrapper.dll").step);
+        }
     } else if (target.result.os.tag == Os.macos) {
         lib.root_module.addRPathSpecial("@loader_path/");
         if (target.result.cpu.arch == std.Target.Cpu.Arch.x86_64) {
-            const wrapper = b.dependency("wooting_wrapper_apple_x86_64", .{});
-            lib.addLibraryPath(wrapper.path("wrapper/"));
-            lib.addIncludePath(wrapper.path("wrapper/includes"));
-            b.getInstallStep().dependOn(&b.addInstallLibFile(
-                wrapper.path("wrapper/libwooting_analog_wrapper.dylib"),
-                "libwooting_analog_wrapper.dylib").step);
+            if (b.lazyDependency("wooting_wrapper_apple_x86_64", .{})) |wrapper| {
+                lib.addLibraryPath(wrapper.path("wrapper/"));
+                lib.addIncludePath(wrapper.path("wrapper/includes"));
+                b.getInstallStep().dependOn(&b.addInstallLibFile(
+                    wrapper.path("wrapper/libwooting_analog_wrapper.dylib"),
+                    "libwooting_analog_wrapper.dylib").step);
+            }
         } else {
-            const wrapper = b.dependency("wooting_wrapper_apple_aarch64", .{});
-            lib.addLibraryPath(wrapper.path("wrapper/"));
-            lib.addIncludePath(wrapper.path("wrapper/includes"));
-            b.getInstallStep().dependOn(&b.addInstallLibFile(
-                wrapper.path("wrapper/libwooting_analog_wrapper.dylib"),
-                "libwooting_analog_wrapper.dylib").step);
+            if (b.lazyDependency("wooting_wrapper_apple_aarch64", .{})) |wrapper| {
+                lib.addLibraryPath(wrapper.path("wrapper/"));
+                lib.addIncludePath(wrapper.path("wrapper/includes"));
+                b.getInstallStep().dependOn(&b.addInstallLibFile(
+                    wrapper.path("wrapper/libwooting_analog_wrapper.dylib"),
+                    "libwooting_analog_wrapper.dylib").step);
+            }
         }
     }
-    b.installArtifact(lib);
+    const install = b.addInstallArtifact(lib, .{
+        .dest_dir = .{ .override = .lib },
+    });
+    b.getInstallStep().dependOn(&install.step);
 }
