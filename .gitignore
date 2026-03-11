@@ -10,3 +10,6 @@ native/*
 build
 src/main/resources/native
 .zig-cache/
+zig-out/
+natives/
+Zig.iml
