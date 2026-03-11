@@ -39,7 +39,7 @@ java {
 
 zig {
     toolchain {
-        version = ZigVersion.of("0.14.1")
+        version = ZigVersion.of("0.15.2")
     }
 }
 
