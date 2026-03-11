@@ -23,6 +23,7 @@ pub fn build(b: *std.Build) void {
     const lib = b.addLibrary(.{
         .name = "wooting-analog-sdk-java-glue",
         .root_module = lib_mod,
+        .linkage = .dynamic,
     });
 
     lib.linkLibCpp();
@@ -34,6 +35,9 @@ pub fn build(b: *std.Build) void {
             lib_mod.addRPathSpecial("$ORIGIN");
             lib_mod.addLibraryPath(wrapper.path("release"));
             lib_mod.addIncludePath(wrapper.path("includes"));
+            b.getInstallStep().dependOn(&b.addInstallLibFile(
+                wrapper.path("release/libwooting_analog_sdk_dist.so"),
+                "libwooting_analog_sdk_dist.so").step);
         }
     } else if (target.result.os.tag == Os.windows) {
         if (b.lazyDependency("wooting_wrapper_windows_x86_64", .{})) |wrapper| {

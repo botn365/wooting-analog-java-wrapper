@@ -138,29 +138,24 @@ public class WootingAnalogWrapper {
         if (os.contains("windows")) {
             if (x86_64) {
                 resourceNameLib = "natives/x86_64-windows-gnu/wooting-analog-sdk-java-glue.dll";
-//                String libPthread = "native/x86_64-windows-gnu/libwinpthread-1.dll";
-//                if (hasUnpackedFile(libPthread)) {
-//                    File lib = unpackNativeLib(libPthread);
-//                    System.load(lib.getAbsolutePath());
-//                }
-                wootingDll = "natives/x86_64-windows-gnu/wooting_analog_wrapper.dll";
+                wootingDll = "natives/x86_64-windows-gnu/wooting_analog_sdk_dist.dll";
             } else {
                 throw new RuntimeException("cpu arch "+cpu+" not suported on "+os);
             }
         } else if (os.contains("linux")) {
             if (x86_64) {
                 resourceNameLib = "natives/x86_64-linux-gnu/libwooting-analog-sdk-java-glue.so";
-                wootingDll = null;
+                wootingDll = "natives/x86_64-linux-gnu/libwooting_analog_sdk_dist.so";
             } else {
                 throw new RuntimeException("cpu arch "+cpu+" not suported on "+os);
             }
         } else if (os.contains("mac")) {
             if (x86_64) {
                 wootingDll = "natives/x86_64-macos-none/libwooting-analog-sdk-java-glue.dylib";
-                resourceNameLib = "native/x86_64-macos-none/libwooting_analog_wrapper.dylib";
+                resourceNameLib = "native/x86_64-macos-none/libwooting_analog_sdk_dist.dylib";
             } else if (arm) {
                 wootingDll = "natives/aarch64-macos-none/libwooting-analog-sdk-java-glue.dylib";
-                resourceNameLib = "natives/aarch64-macos-none/libwooting_analog_wrapper.dylib";
+                resourceNameLib = "natives/aarch64-macos-none/libwooting_analog_sdk_dist.dylib";
             } else {
                 throw new RuntimeException("cpu arch "+cpu+" not suported on "+os);
             }

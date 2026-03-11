@@ -48,7 +48,7 @@ val zigPrefix = layout.buildDirectory.dir("zig-build")
 listOf(
     ZigTargetTriple.X86_64_LINUX_GNU,
     ZigTargetTriple.X86_64_WINDOWS_GNU,
-    ZigTargetTriple.X86_64_MACOS_NONE,
+//    ZigTargetTriple.X86_64_MACOS_NONE,
     ZigTargetTriple.AARCH64_MACOS_NONE,
 ).forEach { target ->
     val targetName = target.resolve()
