@@ -1,7 +1,7 @@
 #include "glue.h"
 #include <jni.h>
 #include <memory>
-#include <wooting-analog-wrapper.h>
+#include <wooting-analog-sdk.h>
 #include <iostream>
 #include <vector>
 
